@@ -16,7 +16,7 @@ const IssuesTableHeaderContainer = styled.div`
     position: relative;
     display : flex;
     flex-direction : row;
-    cursor : ponter;
+    cursor : pointer;
         align-items: center;
     justify-content : space-between;
     

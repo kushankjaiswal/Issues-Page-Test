@@ -39,17 +39,17 @@ const RepoDetailValueContainer = styled.span`
    background-color : #ffffff;
 `;
 
-const RepoDetail = ({ tag, value }) => (
+const RepoDetail = ({ tag, value, handleChange }) => (
   <RepoDetailContainer>
-    <RepoDetailTagContainer>
-      { tag === 'Watch' && <WatchSVG /> }
-      { tag === 'Star' && <StarSVG /> }
-      { tag === 'Fork' && <ForkSVG /> }
+    <RepoDetailTagContainer onClick={() => handleChange(tag, 'increment')}>
+      {tag === 'Watch' && <WatchSVG />}
+      {tag === 'Star' && <StarSVG />}
+      {tag === 'Fork' && <ForkSVG />}
 
       {tag}
       <Caret />
     </RepoDetailTagContainer>
-    <RepoDetailValueContainer>{value}</RepoDetailValueContainer>
+    <RepoDetailValueContainer onClick={() => handleChange(tag, 'decrement')}>{value}</RepoDetailValueContainer>
   </RepoDetailContainer>
 );
 
