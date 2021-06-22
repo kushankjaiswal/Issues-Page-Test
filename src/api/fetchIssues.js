@@ -6,7 +6,7 @@ export function fetchIssues(pageNumber) {
     method: 'get',
     url: GIT_ISSUE_ENDPOINT,
     params: {
-      per_page: 10,
+      per_page: 20,
       page: pageNumber
     }
   });
