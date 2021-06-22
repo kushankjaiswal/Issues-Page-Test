@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import React from 'react';
 import PropTypes from 'prop-types';
 import IssueOpenedSVG from '../commons/svg/IssueOpenedSVG';
-import { OWNER, REPO, WEB_URL } from '../../api/constants';
 import CompletedSVG from '../commons/svg/CompletedSVG';
 import Caret from '../commons/Caret';
 
@@ -86,14 +85,14 @@ const IssuesTableHeader = () => (
         href={''}
       >
         <IssueOpenedSVG />
-            2 Open
+            21 Open
       </OpenClosedIssueAnchor>
       <OpenClosedIssueAnchor
         style={{ marginLeft: '10px' }}
         href={''}
       >
         <CompletedSVG color="#586069" hoverColor="#24292e" />
-            6 closed
+            7 closed
       </OpenClosedIssueAnchor>
     </OpenClosedIssueDetails>
     <OtherDetails>

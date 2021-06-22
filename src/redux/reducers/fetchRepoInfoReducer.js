@@ -1,6 +1,5 @@
 import {
     FETCH_REPOINFO_FAILURE,
-    FETCH_REPOINFO_REQUEST,
     FETCH_REPOINFO_SUCCESS,
 } from '../../constants/constants';
 

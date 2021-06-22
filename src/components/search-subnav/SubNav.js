@@ -6,7 +6,6 @@ import Caret from '../commons/Caret';
 import Input from './Input';
 import FiltersContainer from './FiltersContainer';
 import CreateNewIssueButton from './CreateNewIssueButton';
-import { OWNER, REPO, WEB_URL } from '../../api/constants';
 
 const SubNavContainer = styled.div`
   display: flex;

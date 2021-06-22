@@ -92,7 +92,6 @@ class HeaderContainer extends Component {
           : error ? <SomethingWentWrong />
             : !!repoInfo && Object.keys(repoInfo).length > 0
             && <Header
-              // {...repoInfo}
               repoInfo={repoInfo}
               handleChange={this.handleChange}
             />

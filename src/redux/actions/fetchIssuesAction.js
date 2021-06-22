@@ -1,19 +1,17 @@
 import {
     FETCH_ISSUES_FAILURE,
-    FETCH_ISSUES_REQUEST,
     FETCH_ISSUES_SUCCESS
 } from '../../constants/constants';
 import { fetchIssues } from '../../api/fetchIssues';
 
-
-export function fetchGitIssuesAction() {
+export function fetchGitIssuesAction(pageNumber) {
     return dispatch => {
-        fetchIssues()
+        fetchIssues(pageNumber)
             .then(data => {
                 dispatch(fetchGitIssuesSuccess(data));
             })
             .catch(error => {
-                dispatch(fetchGitIssuesFailure(error));
+                dispatch(fetchGitIssuesFailure({ error: true, message: 'Something Went Wrong' }));
             });
     }
 }

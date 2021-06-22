@@ -1,7 +1,6 @@
 /* eslint-disable no-nested-ternary */
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { fetchGitIssuesAction } from '../redux/actions/fetchIssuesAction';
@@ -14,64 +13,58 @@ const IssuesContainerWrapper = styled.div`
    border-collapse : collapse;
 `;
 
-class IssuesContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fetching: this.props.fetchIssuesReducer.data ? false : true,
-      issues: this.props.fetchIssuesReducer.data,
-      error: this.props.fetchIssuesReducer.data ? false : true
+function IssuesContainer() {
+  const [issues, setIssues] = useState([]);
+  const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const dispatch = useDispatch();
+
+  const fetchIssuesReducer = useSelector(state => state.fetchIssuesReducer);
+
+  useEffect(() => {
+    dispatch(fetchGitIssuesAction(pageNumber))
+  }, [pageNumber])
+
+  useEffect(() => {
+    if (fetchIssuesReducer) {
+      setIssues(fetchIssuesReducer);
+      setFetching(false)
     }
-    this.props.fetchGitIssues();
 
-    console.log(this.props.fetchIssuesReducer)
-  }
+    if (fetchIssuesReducer?.error) {
+      setError(true);
+      setFetching(false);
+    }
+  }, [fetchIssuesReducer])
 
-  componentDidMount() {
-    this.props.fetchGitIssues();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.fetchIssuesReducer?.data && prevProps.fetchIssuesReducer !== this.props.fetchIssuesReducer) {
-      this.setState({ issues: this.props.fetchIssuesReducer.data });
-      console.log('inDidUpdate', this.props.fetchIssuesReducer.data)
+  window.onscroll = function () {
+    if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
+      scrollToEnd()
     }
   }
 
-  render() {
-    const { fetching, issues, error } = this.state;
-
-    return (
-
-      <div>
-        {fetching ? (
-          <LoaderComponent />
-        ) : (error ? <SomethingWentWrong />
-          : (
-            <IssuesContainerWrapper>
-              {!!issues
-                && issues.map(issue => <Issue key={issue.id} issue={issue} />)
-              }
-            </IssuesContainerWrapper>
-          )
-        )}
-      </div>
-
-    );
+  const scrollToEnd = () => {
+    setPageNumber(pageNumber + 1)
   }
+
+  return (
+    <div>
+      {fetching ? (
+        <LoaderComponent />
+      ) : (error ? <SomethingWentWrong />
+        : (
+          <IssuesContainerWrapper>
+            {!!issues
+              && issues.map(issue => <Issue key={issue.id} issue={issue} />)
+            }
+          </IssuesContainerWrapper>
+        )
+      )}
+    </div>
+  );
 }
-
-const mapStateToProps = (state) => {
-  return {
-    fetchIssuesReducer: state.fetchIssuesReducer
-  }
-};
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators({
-    fetchGitIssues: fetchGitIssuesAction
-  }, dispatch)
-};
 
 IssuesContainer.propTypes = {
   requestIssues: PropTypes.func.isRequired,
@@ -86,4 +79,4 @@ IssuesContainer.defaultProps = {
   error: null,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(IssuesContainer);
+export default IssuesContainer;
