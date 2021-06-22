@@ -4,22 +4,19 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { fetchRepoInfoAction } from '../redux/actions/fetchRepoInfoAction';
+import { counterAction } from '../redux/actions/counterAction';
 import Header from '../components/header/Header';
 import LoaderComponent from '../components/commons/LoaderComponent';
 import SomethingWentWrong from '../components/commons/SomethingWentWrong';
-
 
 class HeaderContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fetching: this.props.fetchRepoInfoReducer.data ? false : true,
-      repoInfo: this.props.fetchRepoInfoReducer.data,
-      error: this.props.fetchRepoInfoReducer.data ? false : true
+      fetching: true,
+      repoInfo: {},
+      error: false
     };
-    this.props.fetchRepoInfo();
-
-    console.log(this.props.fetchRepoInfoReducer.data)
   }
 
   componentDidMount() {
@@ -27,11 +24,62 @@ class HeaderContainer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.fetchRepoInfoReducer?.data && prevProps.fetchRepoInfoReducer !== this.props.fetchRepoInfoReducer) {
-      this.setState({ repoInfo: this.props.fetchRepoInfoReducer.data });
-
-      console.log('in Did update', this.props.fetchRepoInfoReducer.data);
+    if (this.props.fetchRepoInfoReducer?.data && JSON.stringify(prevProps.fetchRepoInfoReducer) !== JSON.stringify(this.props.fetchRepoInfoReducer)) {
+      this.setState({
+        repoInfo: this.props.fetchRepoInfoReducer.data,
+        fetching: false
+      });
     }
+
+    if (this.props.fetchRepoInfoReducer?.error && JSON.stringify(prevProps.fetchRepoInfoReducer) !== JSON.stringify(this.props.fetchRepoInfoReducer)) {
+      this.setState({
+        error: true,
+        fetching: false
+      });
+    }
+  }
+
+  handleChange = (tag, operation) => {
+    const cloneRepoInfo = JSON.parse(JSON.stringify(this.props.fetchRepoInfoReducer));
+    let { subscribers_count, stargazers_count, forks_count } = cloneRepoInfo.data;
+
+    if (operation === 'increment') {
+      switch (tag) {
+        case 'Star':
+          stargazers_count++
+          cloneRepoInfo.data.stargazers_count = stargazers_count;
+          break;
+        case 'Watch':
+          subscribers_count++
+          cloneRepoInfo.data.subscribers_count = subscribers_count;
+          break;
+        case 'Fork':
+          forks_count++
+          cloneRepoInfo.data.forks_count = forks_count;
+          break;
+        default:
+          return cloneRepoInfo.data
+      }
+    } else {
+      switch (tag) {
+        case 'Star':
+          stargazers_count--
+          cloneRepoInfo.data.stargazers_count = stargazers_count;
+          break;
+        case 'Watch':
+          subscribers_count--
+          cloneRepoInfo.data.subscribers_count = subscribers_count;
+          break;
+        case 'Fork':
+          forks_count--
+          cloneRepoInfo.data.forks_count = forks_count;
+          break;
+        default:
+          return cloneRepoInfo.data
+      }
+    }
+
+    this.props.counterAction(cloneRepoInfo);
   }
 
   render() {
@@ -43,7 +91,11 @@ class HeaderContainer extends Component {
           ? <LoaderComponent />
           : error ? <SomethingWentWrong />
             : !!repoInfo && Object.keys(repoInfo).length > 0
-            && <Header {...repoInfo} />
+            && <Header
+              // {...repoInfo}
+              repoInfo={repoInfo}
+              handleChange={this.handleChange}
+            />
         }
       </div>
     );
@@ -59,7 +111,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
-    fetchRepoInfo: fetchRepoInfoAction
+    fetchRepoInfo: fetchRepoInfoAction,
+    counterAction: counterAction
   }, dispatch)
 };
 

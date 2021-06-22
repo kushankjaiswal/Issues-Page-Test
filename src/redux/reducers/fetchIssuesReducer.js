@@ -4,7 +4,7 @@ import {
     FETCH_ISSUES_SUCCESS
 } from '../../constants/constants';
 
-const initialState = {}
+const initialState = [];
 
 const fetchIssuesReducer = (state = initialState, action) => {
     switch (action.type) {

@@ -1,6 +1,5 @@
 import {
     FETCH_REPOINFO_FAILURE,
-    FETCH_REPOINFO_REQUEST,
     FETCH_REPOINFO_SUCCESS,
 } from '../../constants/constants';
 import { fetchRepoInfo } from '../../api/fetchRepoInfo';
@@ -13,7 +12,7 @@ export function fetchRepoInfoAction() {
                 dispatch(fetchRepoInfoSuccess(data));
             })
             .catch(error => {
-                dispatch(fetchRepoInfoFailure(error));
+                dispatch(fetchRepoInfoFailure({ error: true, message: 'Something Went Wrong' }));
             });
     };
 }

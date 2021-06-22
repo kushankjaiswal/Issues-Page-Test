@@ -46,13 +46,7 @@ const RepoTitleInfo = styled.div`
 
 `;
 
-const Header = ({
-  name,
-  owner: { login, url },
-  stargazers_count,
-  subscribers_count,
-  forks_count,
-}) => (
+const Header = (props) => (
   <Nav>
     <Navmenus row="first">
       <RepoTitleInfo>
@@ -60,20 +54,20 @@ const Header = ({
         <Anchor
           color="#0366d6"
         >
-          {login}
+          {props.repoInfo.owner.login}
         </Anchor>
         <PathDivider>/</PathDivider>
         <Anchor
           color="#0366d6"
           fontWeight="bold"
         >
-          {name}
+          {props.repoInfo.name}
         </Anchor>
       </RepoTitleInfo>
       <RightNav>
-        <RepoDetail tag="Watch" value={subscribers_count} />
-        <RepoDetail tag="Star" value={stargazers_count} />
-        <RepoDetail tag="Fork" value={forks_count} />
+        <RepoDetail tag="Watch" value={props.repoInfo.subscribers_count} handleChange={props.handleChange} />
+        <RepoDetail tag="Star" value={props.repoInfo.stargazers_count} handleChange={props.handleChange} />
+        <RepoDetail tag="Fork" value={props.repoInfo.forks_count} handleChange={props.handleChange} />
       </RightNav>
     </Navmenus>
 
